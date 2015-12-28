@@ -229,8 +229,8 @@ function camanChanges($image) {
 
 function addText(canvas) {
     var ctx = canvas.getContext("2d");
-    ctx.font = "30px Arial";
-    ctx.fillText("Hello World",0,0);
+    ctx.font = "10px Arial";
+    ctx.fillText("Hello World",10,10);
 }
 
 function convertToBW($image) {
