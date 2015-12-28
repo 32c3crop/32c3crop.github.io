@@ -227,8 +227,15 @@ function camanChanges($image) {
     });  
 }
 
+function addText(canvas) {
+    var ctx = canvas.getContext("2d");
+    ctx.font = "30px Arial";
+    ctx.fillText("Hello World",0,0);
+}
+
 function convertToBW($image) {
     camanChanges($image).then(function(canvas) { 
+        addText(canvas);
         _reallyConvertToBW(cropCanvas(canvas))
     });
 }
