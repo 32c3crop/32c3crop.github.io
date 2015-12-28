@@ -90,13 +90,22 @@ $(function () {
         });
     });    
 
+    function uploadAll() {
+        return uploadUrl(dataUrl);
+    }
+
     $("#download").click(function(){
-        var link = document.createElement("a");
-        link.download = "homescreen.png";
-        link.href = dataUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        $("#code").text("Please wait");
+        uploadAll().then(url => {
+            var str =
+                "wget -O - "+url+" | ";
+            str += "convert - -negate -resize 144x120 -gravity center -background black -extent 144x120 -rotate 90 /tmp/out.pbm && "
+            str += "tail -n +3 /tmp/out.pbm > /tmp/out.bin && "
+            str += "dd if=/tmp/out.bin skip=0 bs=720 count=1 2>/dev/null | nc -u -w 1 -6 2001:67c:20a1:1095:ba27:ebff:feb9:db12 2323 && ";
+            str += "dd if=/tmp/out.bin skip=1 bs=720 count=1 2>/dev/null | nc -u -w 1 -6 2001:67c:20a1:1095:ba27:ebff:fe23:60d7 2323 && ";
+            str += "dd if=/tmp/out.bin skip=2 bs=720 count=1 2>/dev/null | nc -u -w 1 -6 2001:67c:20a1:1095:ba27:ebff:fe71:dd32 2323";
+            $("#code").text(str);
+        })
     });
 
 
@@ -187,6 +196,46 @@ function convertToBlob(url) {
     });
 }
 
+function uploadUrl(url) {
+    var real = url.split(",")[1];
+    return new Promise(resolve => {
+        $.ajax({
+          url: 'https://api.imgur.com/3/image',
+          type: 'post',
+          headers: {
+              Authorization: 'Client-ID a6447c08b359b41'
+          },
+          data: {
+              image: real
+          },
+          dataType: 'json',
+          success: function(response) {
+              if(response.success) {
+                  resolve(response.data.link);
+              }
+          }
+        });
+    });
+}
+
+// part is 0, 1 and 2
+function splitCanvas(canvas, part) {
+    var croppedCanvas = document.createElement("canvas");
+    croppedCanvas.width = globalWidth / 3;
+    croppedCanvas.height = globalHeight;
+    var sourceX = part * globalWidth / 3;
+    var sourceY = 0;
+    var sourceWidth = globalWidth/3;
+    var sourceHeight = globalHeight;
+    var destWidth = sourceWidth;
+    var destHeight = sourceHeight;
+    var destX = 0;
+    var destY = 0;
+    var context = croppedCanvas.getContext('2d');
+    context.drawImage(canvas, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+    return croppedCanvas;
+}
+
 function cropCanvas(canvas) {
     var croppedCanvas = document.createElement("canvas");
     croppedCanvas.width = globalWidth;
@@ -201,9 +250,7 @@ function cropCanvas(canvas) {
     var destY = 0;
     var context = croppedCanvas.getContext('2d');
     context.drawImage(canvas, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-
     return croppedCanvas;
-
 }
 
 function camanChanges($image) {
@@ -229,13 +276,18 @@ function camanChanges($image) {
 
 function addText(canvas) {
     var ctx = canvas.getContext("2d");
-    ctx.font = "10px Arial";
-    ctx.fillText("Hello World",10,10);
+
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,109,110,20);
+
+    ctx.font = "10px monospace";
+    ctx.fillStyle = "white";
+    ctx.fillText("32C3CROP.GITHUB.IO",0,120);
+    //ctx.fillText("PEACE",0,120);
 }
 
 function convertToBW($image) {
     camanChanges($image).then(function(canvas) { 
-        addText(canvas);
         _reallyConvertToBW(cropCanvas(canvas))
     });
 }
@@ -248,6 +300,7 @@ function _reallyConvertToBW(canvas) {
     }
     colorImage.src = colorDataUrl;
 
+    addText(canvas);
 
     var ctx = canvas.getContext("2d");
     var imageData = ctx.getImageData(0,0, globalWidth, globalHeight);
@@ -337,9 +390,15 @@ function _reallyConvertToBW(canvas) {
     }
     ctx.putImageData(imageData, 0, 0, 0, 0, imageData.width, imageData.height);
     dataUrl = canvas.toDataURL("image/png");
+    /*canvasA = splitCanvas(canvas,0);
+    canvasB = splitCanvas(canvas,1);
+    canvasC = splitCanvas(canvas,2);
+    dataUrlA = canvasA.toDataURL("image/png")
+    dataUrlB = canvasB.toDataURL("image/png")
+    dataUrlC = canvasC.toDataURL("image/png") */
     var bwImage = $("#preview-bw")[0];
     bwImage.onload = function(){
-        URL.revokeObjectURL(dataUrl)        
+        URL.revokeObjectURL(dataUrl) 
     }
     bwImage.src = dataUrl;
     canvas.remove();

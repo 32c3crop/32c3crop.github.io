@@ -61,11 +61,10 @@
                     <div class="panel-heading">Final result</div>
                     <div class="panel-body">
                         <img id="preview-bw">
-                        <button class="btn btn-success pull-right" id="download">Save</button>
+                        <button class="btn btn-success pull-right" id="download">Get code</button>
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="row">
 
@@ -78,6 +77,16 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xs-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Shell code</div>
+                    <div class="panel-body" id="code">
+                        Shell code to run will be here. Requires wget, nc and imagemagick
+                        ( sudo apt-get install wget netcat-openbsd imagemagick )
+                    </div>
+                </div>
+            </div>
+ 
             <div class="col-xs-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">Tools</div>
@@ -191,12 +200,22 @@
             </div> <!--/col-->
             <div class="col-xs-3">
                 <div class="panel panel-default">
+                    <div class="panel-heading">About</div>
+                    <div class="panel-body">
+                        Little app based on Canvas, quickly hacked together for this ccc. Applied from <a href="http://trezor.github.io/homescreen-editor">TREZOR homescreen editor</a> (made for <a href="http://satoshilabs.com">SatoshiLabs</a>, little Bitcoin company I work for)</a>.<br><br>
+
+                    </div> <!--/panel-body-->
+                </div> <!--/panel-->
+            </div> <!--/col-->
+
+            <div class="col-xs-3">
+                <div class="panel panel-default">
                     <div class="panel-heading">Credits</div>
                     <div class="panel-body">
                         <ul>
                             <li>
-                                <a href="https://www.flickr.com/photos/thisparticulargreg/228465996">Buddha's face by ThisParticularGreg</a>
-                            </li>
+                                <a href="https://twitter.com/karel_3d">Me</a>
+                            </li> 
                             <li>
                                 <a href="https://github.com/fengyuanchen/cropper">Cropper by Fengyuan Chen</a>
                             </li>
@@ -204,8 +223,12 @@
                                 <a href="https://github.com/conejoninja">Some code by Daniel Esteban</a>
                             </li>
                             <li>
-                                <a href="http://crossorigin.me/">Thumbs up to crossorigin.me, free CORS proxy. Send them some Bitcoins!</a>
+                                <a href="http://crossorigin.me/">crossorigin.me, free CORS proxy</a>
                             </li>
+                            <li>
+                                <a href="https://www.flickr.com/photos/thisparticulargreg/228465996">Buddha's face by ThisParticularGreg</a>
+                            </li>
+
                         <ul>
                     </div> <!--/panel-body-->
                 </div> <!--/panel-->
