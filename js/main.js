@@ -300,7 +300,7 @@ function _reallyConvertToBW(canvas) {
     }
     colorImage.src = colorDataUrl;
 
-    addText(canvas);
+    //addText(canvas);
 
     var ctx = canvas.getContext("2d");
     var imageData = ctx.getImageData(0,0, globalWidth, globalHeight);
